@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "staticfiles/css/my_footer_css.css" %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-1">
+        <div class="col-lg-1">
+        </div>
+        <div class="col-lg-10">
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="bg-white p-4 mb-4 mx-2 rounded custom-shadow">
+                            <h2 class="mb-3">Оформлення абонементу</h2>
+                            <div class="col-md-8">
+                                <form action="{% url "user:abonement_form" %}" method="post">
+                                    {% csrf_token %}
+                                    <div class="pl-item">
+                                        <input id="pl-item-30" type="radio" name="radius" value="1_month" style="display: none;" />
+                                        <label for="pl-item-30">
+                                            <div class="pl-title">1 місяць</div>
+                                            <div class="pl-price">₴100</div>
+                                        </label>
+                                    </div><br>
+                                    <div class="pl-item">
+                                        <input id="pl-item-365" type="radio" name="radius" value="1_year" style="display: none;" />
+                                        <label for="pl-item-365">
+                                            <div class="pl-title">1 рік</div>
+                                            <div class="pl-price">₴500</div>
+                                        </label>
+                                    </div><br>
+                                    <button type="submit" class="btn btn-dark">Підтвертити та сплатити</button>
+                                    <a href="{% url "user:abonement_details" %}" class="btn btn-warning mx-2">Історія абонементів</a>
+                                </form>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+    <footer class="py-4 bg-dark fixed-bottom custom-shadow col-12" style="height: 50px; line-height:20px">
+        <div class="container d-flex">
+            <div class="col-11">
+                <p class="footer-text">Онлайн-бібліотека «New Age» © 2024</p>
+            </div>
+            <div class="col-1">
+                <a href="{% url "dovidka:abonement" %}" class="footer__help">
+                    <span><img class="footer-help" src="{% static "staticfiles/icons/info-square-fill.svg" %}" width="25" height="25" alt="help-info"></span>
+                </a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

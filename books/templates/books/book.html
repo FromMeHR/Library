@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block modal_cart %}
+{% include "includes/cart_button.html" %}
+{% endblock  %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "staticfiles/css/my_footer_css.css" %}">
+{% endblock %}
+
+{% block content %}
+        <div class="container">
+            <div class="row mt-1">
+                <div class="col-1">
+                    <div class="position-absolute card return-button mt-5 rounded mx-4 custom-shadow">
+                        <a href="{% url 'catalog:index' category_slug_url %}">
+                            <img class="p-1" style="" src="{% static "staticfiles/icons/arrow-return-left.svg" %}" alt="Return to catalog" width="35" height="35">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-10">
+                    <div class="container mt-5">
+                        <div class="card mb-4 custom-shadow">
+                            <div class="row">
+                                <div class="col-md-4 image-center">
+                                {% if book.image %}
+                                    <img src="{{ book.image.url }}" class="img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal1">
+                                {% else %}
+                                    <img src="{% static "staticfiles/images/Not found image.png" %}" class="card-img-top" data-bs-toggle="modal" data-bs-target="#imageModal1" alt="...">
+                                {% endif %}
+                                </div>
+                                <div class="col-md-6 book-info">
+                                    <h4 class="mt-3">Характеристики</h4>
+                                    <p class="mt-3">Автор: {{book.author}}</p>
+                                    <p class="mt-3">Рік видання: {{book.publication_year}}</p>
+                                    <p class="mt-3">Кількість сторінок: {{book.pages}}</p>
+                                    <p class="mt-3">Мова: {{book.language}}</p>
+                                    <p class="mt-3">Категорії: {{ categories_filtered }}</p>
+                                    <p class="book_id mt-3">Артикул: {{book.display_id}}</p>
+                                    <div class="d-flex justify-content-between">
+                                        {% if book.quantity > 0 %}
+                                            <p class="text-success">Є на складі ({{ book.quantity }})</p>
+                                        {% else %}
+                                            <p class="text-danger">Книжок немає на складі</p>
+                                        {% endif %}
+                                        <p class="mx-auto">Книжок на читанні: {{ book.is_being_read }}</p>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="imageModal1" tabindex="-1"
+                                    aria-labelledby="imageModal1Label" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="imageModal1Label">{{ book.name }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Закрыть"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                {% if book.image %}
+                                                    <img src="{{ book.image.url }}" class="img-fluid" data-bs-toggle="modal" data-bs-target="#imageModal1">
+                                                {% else %}
+                                                    <img src="{% static "staticfiles/images/Not found image.png" %}" class="img-fluid" data-bs-toggle="modal" data-bs-target="#imageModal1" alt="...">
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                {% if pdf_link %}
+                                    <p class="mt-1">Ця книга є в електронному вигляді, Ви можете завантажити файл книги на свій пристрій за цим посиланням: 
+                                        <a href="{{ pdf_link }}" class="card-title watch-pdf-link" data-book-id="{{ book.id }}" 
+                                        data-controller-url="{% url 'catalog:check_watched_link' %}" style="color: #E32222;" target="_blank">
+                                            {% csrf_token %}
+                                            Перейти за посиланням</a></p>
+                                {% endif %}
+                                <h5>Про книжку «<strong class="book-title">{{ book.name }}</strong>»</h5>
+                                <p class="card-text">{{ book.formatted_content|safe }}</p>
+
+                                {% if request.user.is_authenticated and request.user.role == 1 %}
+                                    <a href="{% url 'catalog:update_book' book.slug %}" class="btn btn-dark">
+                                        Оновити книгу</a>
+                                {% else %}
+                                    <a href="{% url "cart:cart_add" %}" class="btn btn-dark add-to-cart" data-book-id="{{ book.id }}">
+                                        {% csrf_token %}
+                                        Додати до кошику</a>
+                                {% endif %}
+                            </div><hr class="mx-3">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-md-7">
+                                    <h5 class="card-title2 px-3 m-0">Відгуки ({{ book.comment_set.count }})</h5>
+                                    <div class="card-body" id="comment-section">
+                                        {% if comments %}
+                                            <div id="comments-container"><hr>
+                                                {% for comment in comments %}
+                                                    <div class="comment mt-2">
+                                                        <p class="comment-info">
+                                                            <strong>{{ comment.user.first_name }} {{ comment.user.last_name }}</strong>,
+                                                            Рейтинг: {{ comment.rating }}/5,
+                                                            {{ comment.created|date:"d.m.Y H:i" }} 
+                                                            {% if comment.user == request.user %}
+                                                                <img class="mx-2 mb-2 edit-comment" src="{% static "staticfiles/icons/pencil-fill.svg" %}" 
+                                                                alt="Edit Icon" width="14" height="14" data-comment-id="{{ comment.id }}">
+                                                            {% endif %}
+                                                        </p>
+                                                        <p id="comment-text-{{ comment.id }}" class="comment-body">{{ comment.body }}</p>
+                                                        <form id="edit-comment-form-{{ comment.id }}" class="d-none" data-comment-id="{{ comment.id }}" action="{% url 'catalog:update_comment' comment.id %}" method="post">
+                                                            {% csrf_token %}
+                                                            <div class="mb-3">
+                                                                <label for="id_rating_{{ comment.id }}" class="form-label">Новий рейтинг</label>
+                                                                <select class="form-control" id="id_rating_{{ comment.id }}" name="rating" required>
+                                                                    <option value="" selected disabled>Оберіть рейтинг*</option>
+                                                                    <option value="1" {% if comment.rating == 1 %}selected{% endif %}>1</option>
+                                                                    <option value="2" {% if comment.rating == 2 %}selected{% endif %}>2</option>
+                                                                    <option value="3" {% if comment.rating == 3 %}selected{% endif %}>3</option>
+                                                                    <option value="4" {% if comment.rating == 4 %}selected{% endif %}>4</option>
+                                                                    <option value="5" {% if comment.rating == 5 %}selected{% endif %}>5</option>
+                                                                </select>
+                                                                
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="id_body_{{ comment.id }}" class="form-label">Новий відгук</label>
+                                                                <textarea class="form-control" id="id_body_{{ comment.id }}" placeholder="Відгук*" name="body" rows="4" required style="overflow-y: auto;">{{comment.body}}</textarea>
+                                                            </div>
+                                                            <button type="submit" class="btn btn-sm btn-dark mt-2">Оновити</button>
+                                                        </form>
+                                                    </div>
+                                                    {% if forloop.last %}{% else %}<hr>{% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <div id="load-more-container" class="">
+                                                {% if comments|length > 3 %}<hr>
+                                                    <button id="load-more" class="btn btn-outline-dark">Дивитися ще відгуки</button>
+                                                {% endif %}
+                                            </div>
+                                        {% else %}
+                                            <p>Поки що відгуків немає</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-5 card card-change-style mb-2 p-0">
+                                    <div class="card-header">
+                                        <h5 class="card-title2">Залиште свій відгук</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form method="post" action="{% url 'catalog:book' book.slug %}">
+                                            {% csrf_token %}
+                                            <label for="id_rating" class="form-label">Рейтинг</label>
+                                            <div class="mb-3 rating-container">
+                                                <select class="form-control flex-grow-1" id="id_rating" name="rating" required>
+                                                    <option value="" selected disabled>Оберіть рейтинг*</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                </select>
+                                                <a href="{% url "dovidka:storinka_knigi" %}#Рейтинг" class="dovidka__help_by_tag rating-help-icon">
+                                                    <img class="dovidka-help" src="{% static "staticfiles/icons/question-circle-fill.svg" %}" width="16" height="16" alt="help-info">
+                                                </a>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="id_body" class="form-label">Відгук</label>
+                                                <textarea class="form-control" id="id_body" placeholder="Відгук*" name="body" rows="4" required style="overflow-y: auto;"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-dark mt-2">Надіслати</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1">
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{% block footer %}
+    <footer class="py-4 bg-dark fixed-bottom custom-shadow col-12" style="height: 50px; line-height:20px">
+        <div class="container d-flex">
+            <div class="col-11 footer__help">
+                <p class="footer-text">Онлайн-бібліотека «New Age» © 2024</p>
+            </div>
+            <div class="col-1">
+                <a href="{% url "dovidka:storinka_knigi" %}" class="footer__help">
+                    <span><img class="footer-help" src="{% static "staticfiles/icons/info-square-fill.svg" %}" width="25" height="25" alt="help-info"></span>
+                </a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

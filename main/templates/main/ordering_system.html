@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "staticfiles/css/my_footer_css.css" %}">
+{% endblock %}
+
+{% block modal_cart %}
+{% include "includes/cart_button.html" %}
+{% endblock  %}
+
+{% block content %}
+    <div class="bg-white custom-shadow rounded" style="margin-top: 150px; ">
+        <div class="container p-3">
+            <h3 class="m-2 p-1"><strong>Система бронювання</strong></h3>
+            <p class="m-2 p-1">Для того щоб оформити бронювання книг і прийти забрати їх з бібліотеки, треба зареєструватись та увійти в акаунт.<br> 
+                Авторизований користувач має можливість оформити абонемент на місяць/рік, який надає доступ забронювати книги або отримати посилання на електронну книгу.<br>
+                Коли у Вас статус бронювання зміниться на "Готово для отримання", Ви матимете 2 дні, щоб прийти та оформити отримання книг з бібліотеки, інакше статус зміниться на "Протерміновано з отриманням".<br>
+                Якщо не повернете вчасно, статус зміниться на "Протерміновано з поверненням".
+            </p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <footer class="py-4 bg-dark fixed-bottom custom-shadow col-12" style="height: 50px; line-height:20px">
+        <div class="container d-flex">
+            <div class="col-11">
+                <p class="footer-text">Онлайн-бібліотека «New Age» © 2024</p>
+            </div>
+            <div class="col-1">
+                <a href="{% url "dovidka:informatsiya" %}" class="footer__help">
+                    <span><img class="footer-help" src="{% static "staticfiles/icons/info-square-fill.svg" %}" width="25" height="25" alt="help-info"></span>
+                </a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

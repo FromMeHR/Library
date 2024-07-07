@@ -1,0 +1,289 @@
+body {
+  background-image: url("../images/bg-image.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center center;
+  background-size: cover;
+  height: 100%;
+}
+
+.navbar {
+  height: 55px;
+}
+
+.dropdown-toggle::after {
+  content: none;
+}
+
+.custom-shadow {
+  box-shadow: 3px 3px 20px 14px #000000;
+}
+
+.card-img-top {
+  height: 300px;
+  width: 218px;
+  margin: 10px;
+}
+
+
+.card-title2,
+.card-title {
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.card-title:hover {
+  text-decoration: underline;
+}
+
+
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.remove-from-cart {
+  margin-left: 10px;
+}
+
+.card-info {
+  width: 240px;
+}
+
+.image-center {
+  margin: 10px;
+}
+
+.img-thumbnail {
+  height: 330px;
+}
+
+.book_id {
+  color: gray;
+  font-size: 15px;
+}
+
+.badge.bg-warning.text-dark {
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  z-index: 1;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 1rem;
+  box-shadow: 2px 2px 15px 9px #000000;
+}
+
+.badge-banner {
+  top: 80%;
+  border-radius: 15px;
+  font-size: 0.7rem;
+}
+
+/* .logo-info {
+  font-family: 'Fascinate Inline';
+  font-size: 34px;
+  margin-left: 26%;
+  text-transform: uppercase;
+  position: fixed;
+  text-decoration: none;
+}
+.logo-info2 {
+  font-family: 'Fascinate Inline';
+  font-size: 25px;
+  margin-left: 30%;
+  color: #E32222;
+  position: fixed;
+  text-decoration: none;
+} */
+
+.logo-info {
+  margin-right: 19em;
+  margin-left: 19em;
+}
+
+.header__logo {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.header__logo > img {
+  font-size: 2.1rem;
+  margin-left: -90px;
+  padding: 0 17px;
+  position: absolute;
+  left: 50%;
+}
+
+
+.pl-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: rgba(0,0,0,.85);
+  margin-right: auto;
+  text-align: left;
+}
+
+.pl-price {
+  font-size: 18px;
+  font-weight: bold;
+  color: #000;
+}
+
+.pl-item input[type=radio]+label {
+  border-radius: 5px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  height: 100%;
+  padding: 20px 28px 20px 60px;
+  background: #e3e3e3;
+  border: 1px solid #d7d7d7;
+  transition: box-shadow .25s ease-in-out;
+  position: relative;
+}
+
+.pl-item input[type=radio]+label:before {
+  content: "";
+  display: block;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  border: 1px solid #d7d7d7;
+  background: #fff;
+  position: absolute;
+  left: 23px;
+  top: 50%;
+  margin-top: -12px;
+  box-sizing: border-box;
+}
+
+.pl-item input[type=radio]:checked+label:after {
+  opacity: 1;
+}
+
+.pl-item input[type=radio]+label:after {
+  content: "";
+  display: block;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  background: #000000;
+  position: absolute;
+  left: 29px;
+  top: 50%;
+  margin-top: -6px;
+  opacity: 0;
+  transition: opacity .25s ease-in-out;
+}
+
+.card-change-style {
+  height:375px;
+  width:345px;
+  margin-right: 15px;
+}
+textarea {
+  resize: none;
+}
+
+.chart-container {
+  /* width: 90%;
+  height: 90%; */
+  margin: auto;
+}
+
+.comment-info {
+  margin-bottom: 0; 
+}
+
+.comment-body {
+  margin-top: 0;
+}
+
+.button-active {
+  --bs-btn-color: #000;
+  --bs-btn-active-bg: #E32222;
+  --bs-btn-active-border-color: #E32222;
+}
+
+.dovidka__help_by_tag > img {
+  transition: filter 0.3s ease;
+}
+
+.dovidka__help_by_tag:hover > img {
+  filter: brightness(3);
+}
+
+.rating-container {
+  position: relative;
+}
+
+.rating-help-icon {
+  position: absolute;
+  top: 50%; 
+  transform: translateY(-50%); 
+  right: 10px;
+  display: none; 
+}
+
+.rating-container:hover .rating-help-icon {
+  display: block;
+}
+
+@keyframes showIcon {
+  from { opacity: 0; transform: translateY(10px); }
+}
+
+@media (max-width: 1440px) {
+  .navbar {
+    height: auto;
+  }
+  .return-button {
+    display: none;
+  }
+}
+@media (max-width: 1000px) {
+  .logo-info {
+    display: none;
+  }
+  .filters-info {
+    position: fixed;
+    margin-left: 510px;
+    margin-top: -24px;
+    z-index: 5;
+  }
+  .start-end-chart {
+    margin-top: 40px;
+  }
+}
+
+@media (max-width: 765px) {
+  .card-info {
+    margin-left: 50px;
+  }
+  .image-center {
+    margin-top: 10px;
+    margin-left: 0px;
+    text-align: center;
+  }
+  .book-info {
+    margin-left: 20px;
+  }
+  .filters-info {
+    position: fixed;
+    margin-left: 340px;
+    margin-top: -24px;
+    z-index: 5;
+  }
+  .card-change-style {
+    height:390px;
+    width:375px;
+    margin-right: 0;
+  }
+}

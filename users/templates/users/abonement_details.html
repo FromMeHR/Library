@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "staticfiles/css/my_footer_css.css" %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-1">
+        <div class="col-lg-1">
+        </div>
+        <div class="col-lg-10">
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="bg-white p-4 mb-4 mx-2 rounded custom-shadow">
+                            {% if all_abonements %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Сума платежу</th>
+                                            <th scope="col">Кількість днів</th>
+                                            <th scope="col">Статус платежу</th>
+                                            <th scope="col">Дата платежу</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                        {% for abonement in all_abonements %}
+                                            {% if forloop.last and active_abonement %}
+                                                <h2>Зараз діє абонемент #{{ forloop.counter }}</h2><br>
+                                                <h2>Історія абонементів</h2>
+                                            {% else %}
+                                                <h2>Зараз не має активного абонементу</h2><br>
+                                                <h2>Історія абонементів</h2>
+                                            {% endif %}
+                                            <tr>
+                                                <th scope="row">{{ forloop.counter }}</th>
+                                                <td>{{ abonement.price }}</td>
+                                                <td>{{ abonement.amount_of_days }}</td>
+                                                <td>{{ abonement.get_payment_status_display }}</td>
+                                                <td>{{ abonement.get_formatted_time }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <h2>Не було здійснено жодного платежу</h2>
+                            {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+    <footer class="py-4 bg-dark fixed-bottom custom-shadow col-12" style="height: 50px; line-height:20px">
+        <div class="container d-flex">
+            <div class="col-11">
+                <p class="footer-text">Онлайн-бібліотека «New Age» © 2024</p>
+            </div>
+            <div class="col-1">
+                <a href="{% url "dovidka:abonement" %}" class="footer__help">
+                    <span><img class="footer-help" src="{% static "staticfiles/icons/info-square-fill.svg" %}" width="25" height="25" alt="help-info"></span>
+                </a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

@@ -1,0 +1,22 @@
+[
+  {
+    "model": "books.categories",
+    "pk": 4,
+    "fields": { "name": "Всі книги", "slug": "all" }
+  },
+  {
+    "model": "books.categories",
+    "pk": 5,
+    "fields": { "name": "Електронні книги", "slug": "elektronni-knigi" }
+  },
+  {
+    "model": "books.categories",
+    "pk": 6,
+    "fields": { "name": "Біографії", "slug": "biografiyi" }
+  },
+  {
+    "model": "books.categories",
+    "pk": 7,
+    "fields": { "name": "Фантастика", "slug": "fantastika" }
+  }
+]

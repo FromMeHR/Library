@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "staticfiles/css/my_footer_css.css" %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-1">
+        <div class="col-1">
+            <div class="position-absolute card return-button mt-5 rounded mx-4 custom-shadow">
+                <a href="{% url 'user:admin_panel' %}">
+                    <img class="p-1" style="" src="{% static "staticfiles/icons/arrow-return-left.svg" %}" alt="Return to catalog" width="35" height="35">
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-10">
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="bg-white p-4 mb-4 rounded custom-shadow">
+                            <div class="col-md-12 d-flex justify-content-center">
+                                <div class="col-md-6 mb-2">
+                                    <form class="d-flex" role="search" action="{% url "orders:all_orders" %}" method="get">
+                                        <input type="search" name="q" class="form-control me-2" value="{{request.GET.q}}"placeholder="Пошук бронювання по id/status">
+                                        <button class="btn btn-outline-primary" type="submit">Шукати</button>
+                                    </form>
+                                </div>
+                            </div>
+                            {% if all_reader_orders %}
+                                <h2>Всі бронювання створеними читачами</h2>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col" style="width:200px;">Статус</th>
+                                                <th scope="col">Дата створення</th>
+                                                <th scope="col">Дата початку</th>
+                                                <th scope="col">Дата закінчення</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-group-divider">
+                                            {% for order in all_reader_orders %}
+                                                <tr style="vertical-align: middle;">
+                                                    <th scope="row"><a class="text-black" href="{% url 'orders:chosen_order' order.id %}">{{ order.id }}</a></th>
+                                                    <td>{{ order.get_order_status_display }}</td>
+                                                    <td>{{ order.get_formatted_time }}</td>
+                                                    <td>{% if order.order_start %}{{ order.get_formatted_time_order_start }}{% endif %}</td>
+                                                    <td>{% if order.order_end %}{{ order.get_formatted_time_order_end }}{% endif %}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <h2>В базі немає бронювань</h2>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+    <footer class="py-4 bg-dark fixed-bottom custom-shadow col-12" style="height: 50px; line-height:20px">
+        <div class="container d-flex">
+            <div class="col-11">
+                <p class="footer-text">Онлайн-бібліотека «New Age» © 2024</p>
+            </div>
+            <div class="col-1">
+                <a href="{% url "dovidka:bronyuvannya_chitachiv" %}" class="footer__help">
+                    <span><img class="footer-help" src="{% static "staticfiles/icons/info-square-fill.svg" %}" width="25" height="25" alt="help-info"></span>
+                </a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

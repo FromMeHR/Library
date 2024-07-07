@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load static %}
+{% load books_tags %}
+
+{% block modal_cart %}
+{% include "includes/cart_button.html" %}
+{% endblock  %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "staticfiles/css/my_footer_css.css" %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row mt-1">
+            <div class="col-1">
+            </div>
+            <div class="col-10">
+                <div class="row">
+                    <div class="dropdown mb-2 filters-info">
+                        <button class="btn btn-secondary dropdown-toggle btn-dark" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Сортування
+                        </button>
+                
+                        <form action="{% if request.GET.q %}{% url "catalog:search" %}{% else %}{% url "catalog:index" slug_url  %}{% endif %}" method="get" class="dropdown-menu bg-dark" data-bs-theme="dark">
+                            {% if request.GET.q %}
+                                <input type="hidden" name="q" value="{{request.GET.q}}"> <!--if also -?q=стул&on_sale=on&order_by=default -->
+                            {% endif %}
+                            <p class="text-white mx-3 mt-3">Сортувати:</p>
+                            <div class="form-check text-white mx-3">
+                                <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault1" value="default" {% if not request.GET.order_by or request.GET.order_by == 'default' %}checked{% endif %}>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    За замовчуванням
+                                </label>
+                            </div>
+                            <div class="form-check text-white mx-3">
+                                <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault2" value="publication_year" {% if request.GET.order_by == 'publication_year' %}checked{% endif %}>
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                    За роком видання від нових до старих
+                                </label>
+                            </div>
+                            <div class="form-check text-white mx-3">
+                                <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault3" value="-publication_year" {% if request.GET.order_by == '-publication_year' %}checked{% endif %}>
+                                <label class="form-check-label" for="flexRadioDefault3">
+                                    За роком видання від старих до нових
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary mx-3 mt-3">Підтвердити</button>
+                        </form>
+                    </div>
+
+                    {% if request.GET.q %}
+                        <h3 class="mt-4 text-white">Пошукові результати по - "{{ request.GET.q }}"</h3>
+                        {% if not books %}
+                            <h2 class="mt-4 text-white">Не знайдено</h2>
+                        {% endif %}
+                    {% endif %}
+                    
+                    {% for book in books %}
+                        <div class="col-lg-4 col-md-6 col-10 p-4">
+                            <div class="card rounded custom-shadow card-info">
+                                <a href="{{ book.get_absolute_url }}?category_slug={{ slug_url }}">
+                                    {% if book.image %}
+                                        <img src="{{book.image.url}}" class="card-img-top" alt="{{book.name}}">
+                                    {% else %}
+                                        <img src="{% static "staticfiles/images/Not found image.png" %}" class="card-img-top" alt="...">
+                                    {% endif %}
+                                </a>
+                                <div class="card-body">
+                                    <a href="{{ book.get_absolute_url }}?category_slug={{ slug_url }}" class="card-title">
+                                        <p>
+                                            {% autoescape off %} <!-- display styles -->
+                                                {% if book.headline %} <!--created field in utils.py q_search -->
+                                                    {{book.name|truncatechars:24}}
+                                                {% else %}
+                                                    {{book.name|truncatechars:24}}
+                                                {% endif %}
+                                            {% endautoescape %}
+                                        </p>
+                                    </a>
+                                    <p class="card-text">                                                
+                                        {% autoescape off %}
+                                            {% if book.bodyline %}
+                                                {{book.bodyline|truncatechars:90}}
+                                            {% else %}
+                                                {{book.description|truncatechars:40}}
+                                            {% endif %}
+                                        {% endautoescape %}
+                                    </p>
+                                    {% if request.user.is_authenticated and request.user.role == 1 %}
+                                    <div class="d-flex justify-content-between">
+                                        <a href="{% url 'catalog:update_book' book.slug %}" class="btn btn-dark btn-sm">
+                                            Оновити книгу
+                                        </a>
+                                    </div>
+                                    {% else %}
+                                    <div class="d-flex justify-content-between">
+                                        <a href="{% url "cart:cart_add" %}" class="btn btn-dark btn-sm add-to-cart" data-book-id="{{ book.id }}">
+                                            {% csrf_token %}
+                                            Додати до кошику
+                                        </a>
+                                    </div>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if books %}
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center my-4">
+                            <div class="custom-shadow d-flex" style="border-radius: 15px;">
+                                <li class="page-item {% if not books.has_previous %}disabled{% endif %}">
+                                    <a class="page-link" href="{% if books.has_previous %}?{% change_params page=books.previous_page_number %}{% else %}#{% endif %}">Попередня</a>
+                                </li>
+
+                                {% if books.number|add:-2 > 1 %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?{% change_params page=1 %}">1</a>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                {% endif %}
+
+                                {% for page in books.paginator.page_range %}
+                                    {% if page >= books.number|add:-2 and page <= books.number|add:2 %}
+                                        <li class="page-item {% if books.number == page %}active{% endif %}">
+                                            <a class="page-link" href="?{% change_params page=page %}">{{ page }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if books.number < books.paginator.num_pages|add:-2 %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?{% change_params page=books.paginator.num_pages %}">{{ books.paginator.num_pages }}</a>
+                                    </li>
+                                {% endif %}
+
+                                <li class="page-item {% if not books.has_next %}disabled{% endif %}">
+                                    <a class="page-link" href="{% if books.has_next %}?{% change_params page=books.next_page_number %}{% else %}#{% endif %}">Наступна</a>
+                                </li>
+                            </div>
+                        </ul>
+                    </nav>
+                {% endif %}
+            </div>
+            <div class="col-1">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <footer class="py-4 bg-dark fixed-bottom custom-shadow col-12" style="height: 50px; line-height:20px">
+        <div class="container d-flex">
+            <div class="col-11 footer__help">
+                <p class="footer-text">Онлайн-бібліотека «New Age» © 2024</p>
+            </div>
+            <div class="col-1">
+                <a href="{% url "dovidka:katalog_knig" %}" class="footer__help">
+                    <span><img class="footer-help" src="{% static "staticfiles/icons/info-square-fill.svg" %}" width="25" height="25" alt="help-info"></span>
+                </a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

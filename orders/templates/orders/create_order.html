@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+{% load carts_tags %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "staticfiles/css/my_footer_css.css" %}">
+{% endblock %}
+
+{% block content %}
+<div class=" bg-white p-4 mb-4 mx-2 rounded custom-shadow">
+    <div class="container">
+        <h3 class="text-center mb-4">Обрані книги</h3>
+        <div class="container" id="cart-items-container">
+            {% user_carts request as carts %}
+            {% include "carts/includes/included_cart.html" %}
+        </div>
+    </div>
+    <div class="container">
+        <h3 class="text-center">Деталі бронювання</h3>
+        <div class="card mb-3">
+            <div class="card-body">
+                <form action="{% url "orders:create_order" %}" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="id_first_name" class="form-label">Ім'я*:</label>
+                            <input type="text" class="form-control" id="id_first_name" name="first_name" 
+                                value="{% if form.first_name.value %}{{form.first_name.value}}{% endif %}" 
+                                required>
+                                {% if form.first_name.errors %}
+                                <div class="alert alert-danger alert-dismissible fade show">{{form.first_name.errors}}</div>
+                                {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_last_name" class="form-label">Прізвище*:</label>
+                            <input type="text" class="form-control" id="id_last_name" name="last_name" 
+                                value="{% if form.last_name.value %}{{form.last_name.value}}{% endif %}" 
+                                required>
+                                {% if form.last_name.errors %}
+                                <div class="alert alert-danger alert-dismissible fade show">{{form.last_name.errors}}</div>
+                                {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_phone_number" class="form-label">Номер телефону*:</label>
+                            <input type="text" class="form-control" id="id_phone_number" name="phone_number"
+                                placeholder="В формате: XXX-XXX-XX-XX"
+                                value="{% if form.phone_number.value %}{{form.phone_number.value}}{% endif %}" 
+                                required>
+                                {% if form.phone_number.errors %}
+                                <div class="alert alert-danger alert-dismissible fade show">{{form.phone_number.errors}}</div>
+                                {% endif %}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-dark">Підтвердити оформлення</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+    <footer class="py-4 bg-dark fixed-bottom custom-shadow col-12" style="height: 50px; line-height:20px">
+        <div class="container d-flex">
+            <div class="col-11">
+                <p class="footer-text">Онлайн-бібліотека «New Age» © 2024</p>
+            </div>
+            <div class="col-1">
+                <a href="{% url "dovidka:oformlennya_bronyuvannya" %}" class="footer__help">
+                    <span><img class="footer-help" src="{% static "staticfiles/icons/info-square-fill.svg" %}" width="25" height="25" alt="help-info"></span>
+                </a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

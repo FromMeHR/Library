@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "staticfiles/css/my_footer_css.css" %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-1">
+        <div class="col-lg-1">
+        </div>
+        <div class="col-lg-10">
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="bg-white p-4 mb-4 mx-2 rounded custom-shadow">
+                            <h2 class="mb-4">Cтворення/Оновлення книги</h2>
+                            <form class="form" action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="id_name" class="form-label">Назва*</label>
+                                    <input type="text" class="form-control" id="id_name" name="name" value="{% if form.name.value %}{{ form.name.value }}{% else %}{{ book.name }}{% endif %}" required placeholder="Введіть назву книги">
+                                {% if form.name.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show">{{ form.name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_slug" class="form-label">Slug*</label>
+                                <input type="text" class="form-control" id="id_slug" name="slug" value="{% if form.slug.value is not None %}{{ form.slug.value }}{% else %}{{ book.slug }}{% endif %}" placeholder="Введіть slug">
+                                {% if form.slug.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show">{{ form.slug.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_description" class="form-label">Опис</label>
+                                <textarea class="form-control" id="id_description" name="description" rows="5" placeholder="Введіть опис">{% if form.description.value %}{{ form.description.value }}{% else %}{{ book.description }}{% endif %}</textarea>
+                                {% if form.description.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show">{{ form.description.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_author" class="form-label">Автор</label>
+                                <input type="text" class="form-control" id="id_author" name="author" value="{% if form.author.value %}{{ form.author.value }}{% else %}{{ book.author }}{% endif %}" placeholder="Введіть автора">
+                                {% if form.author.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show">{{ form.author.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_image" class="form-label">Зображення</label>
+                                <input type="file" class="form-control" id="id_image" name="image" placeholder="Виберіть зображення книги">
+                                {% if form.image.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show">{{ form.image.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_quantity" class="form-label">Кількість</label>
+                                <input type="number" class="form-control" id="id_quantity" name="quantity" value="{% if form.quantity.value %}{{ form.quantity.value }}{% else %}{{ book.quantity }}{% endif %}" placeholder="Введіть кількість">
+                                {% if form.quantity.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show">{{ form.quantity.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_is_being_read" class="form-label">Зараз на читанні</label>
+                                <input type="number" class="form-control" id="id_is_being_read" name="is_being_read" value="{% if form.is_being_read.value %}{{ form.is_being_read.value }}{% else %}{{ book.is_being_read }}{% endif %}" placeholder="Введіть статус читання">
+                                {% if form.is_being_read.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show">{{ form.is_being_read.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_pages" class="form-label">Кількість сторінок</label>
+                                <input type="number" class="form-control" id="id_pages" name="pages" value="{% if form.pages.value %}{{ form.pages.value }}{% else %}{{ book.pages }}{% endif %}" placeholder="Введіть кількість сторінок">
+                                {% if form.pages.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show">{{ form.pages.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_language" class="form-label">Мова</label>
+                                <select class="form-control" id="id_language" name="language" placeholder="Виберіть мову">
+                                    <option value="українська" {% if book.language == 'українська' %}selected{% endif %}>українська</option>
+                                    <option value="англійська" {% if book.language == 'англійська' %}selected{% endif %}>англійська</option>
+                                </select>
+                                {% if form.language.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show">{{ form.language.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_publication_year" class="form-label">Рік створення</label>
+                                <select class="form-control" id="id_publication_year" name="publication_year" placeholder="Виберіть рік створення">
+                                {% for year in YEAR_CHOICES %}
+                                    <option value="{{ year }}" {% if book.publication_year == year %}selected{% endif %}>{{ year }}</option>
+                                {% endfor %}
+                                </select>
+                                {% if form.publication_year.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show">{{ form.publication_year.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_category" class="form-label">Категорії*</label>
+                                <select class="form-control" id="id_category" name="category" required multiple placeholder="Виберіть категорії">
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}" {% if category in book.category.all %}selected{% endif %}>{{ category.name }}</option>
+                                {% endfor %}
+                                </select>
+                                {% if form.category.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show">{{ form.category.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_pdf_file" class="form-label">PDF файл</label>
+                                <input type="file" class="form-control" id="id_pdf_file" name="pdf_file" placeholder="Виберіть PDF файл">
+                                {% if form.pdf_file.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show">{{ form.pdf_file.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <button type="submit" class="btn btn-dark">Підтвердити</button>
+                            {% if request.resolver_match.url_name == 'create_book' %}
+                                <a href="{% url "user:admin_panel" %}" class="btn btn-secondary mx-2">Відмінити</a>
+                            {% elif request.resolver_match.url_name == 'update_book' %}
+                                <a href="{% url "catalog:book" book.slug %}" class="btn btn-secondary mx-2">Відмінити</a>
+                            {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+    <footer class="py-4 bg-dark fixed-bottom custom-shadow col-12" style="height: 50px; line-height:20px">
+        <div class="container d-flex">
+            <div class="col-11">
+                <p class="footer-text">Онлайн-бібліотека «New Age» © 2024</p>
+            </div>
+            <div class="col-1">
+                <a href="{% url "dovidka:dodavannya_onovlennya_knigi" %}" class="footer__help">
+                    <span><img class="footer-help" src="{% static "staticfiles/icons/info-square-fill.svg" %}" width="25" height="25" alt="help-info"></span>
+                </a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

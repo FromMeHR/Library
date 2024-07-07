@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load static %}
+{% load carts_tags %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "staticfiles/css/my_footer_css.css" %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-1">
+        <div class="col-lg-1">
+        </div>
+        <div class="col-lg-10">
+            <div class="row">
+                <div class="container mt-5">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="bg-white p-4 mb-4 mx-2 rounded custom-shadow">
+                                <h3 class="text-center mb-4">Профіль {% if request.user.role == 0 %}читача{% else %}адміністратора{% endif %}</h3>
+                                <form action="{% url "user:profile" %}" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3 text-center">
+                                            {% if user.image %}
+                                                <img src="{{ user.image.url }}"
+                                                    alt="Аватар" class="img-fluid rounded-circle"
+                                                    style="width: 130px; height: 130px;">
+                                            {% else %}
+                                                <img src="{% static "staticfiles/images/baseavatar.png" %}"
+                                                    alt="Аватар" class="img-fluid rounded-circle"
+                                                    style="max-height: 130px;">
+                                            {% endif %}
+                                            <input type="file" class="form-control mt-3" id="id_image"
+                                                name="image"
+                                                accept="image/*">
+                                                {% if form.image.errors %}
+                                                <div class="alert alert-danger alert-dismissible fade show">{{form.image.errors}}</div>
+                                                {% endif %}
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="id_first_name" class="form-label">Ім'я*</label>
+                                            <input type="text" class="form-control" id="id_first_name"
+                                                name='first_name'
+                                                placeholder="Введіть нове ім'я" 
+                                                value="{{form.first_name.value}}" 
+                                                required>
+                                                {% if form.first_name.errors %}
+                                                <div class="alert alert-danger alert-dismissible fade show">{{form.first_name.errors}}</div>
+                                                {% endif %}
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="id_last_name" class="form-label">Прізвище*</label>
+                                            <input type="text" class="form-control" id="id_last_name"
+                                                name="last_name"
+                                                placeholder="Введіть нове прізвище"
+                                                value="{{ form.last_name.value }}"
+                                                required>
+                                                {% if form.last_name.errors %}
+                                                <div class="alert alert-danger alert-dismissible fade show">{{form.last_name.errors}}</div>
+                                                {% endif %}
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="id_username" class="form-label">Ім'я користувача*</label>
+                                            <input type="text" class="form-control" id="id_username"
+                                                name="username"
+                                                placeholder="Введіть нове ім'я користувача"
+                                                value="{{ form.username.value }}"
+                                                required>
+                                                {% if form.username.errors %}
+                                                <div class="alert alert-danger alert-dismissible fade show">{{form.username.errors}}</div>
+                                                {% endif %}
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="id_phone_number" class="form-label">Номер телефону*</label>
+                                            <input type="text" class="form-control" id="id_phone_number"
+                                                name="phone_number"
+                                                placeholder="Введіть новий номер телефону"
+                                                value="{% if form.phone_number.value %}{{ form.phone_number.value }}{% endif %}"
+                                                required>
+                                                {% if form.phone_number.errors %}
+                                                <div class="alert alert-danger alert-dismissible fade show">{{form.phone_number.errors}}</div>
+                                                {% endif %}
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="id_email" class="form-label">Email*</label>
+                                            <input type="email" class="form-control" id="id_email"
+                                                name="email"
+                                                placeholder="Введите ваш email *youremail@example.com"
+                                                value="{{ form.email.value }}"
+                                                required>
+                                                {% if form.email.errors %}
+                                                <div class="alert alert-danger alert-dismissible fade show">{{form.email.errors}}</div>
+                                                {% endif %}
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-dark">Зберегти</button>
+                                </form>
+                            </div>
+                        </div>
+                        {% if user.is_authenticated and user.role != 1 %}
+                        {% user_carts request as carts %}
+                        <div class="col-md-7">
+                            <div class=" bg-white p-4 mb-4 mx-2 rounded custom-shadow">
+                                <h3 class="text-center mb-4">Кошик</h3>
+                                <div class="container" id="cart-items-container">
+                                    {% include "carts/includes/included_cart.html" %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="bg-white p-4 mb-4 mx-2 rounded custom-shadow">
+                                <h3 class="text-center mb-4">Мої бронювання
+                                    <a href="{% url "dovidka:profil_1" %}#Мої бронювання" class="dovidka__help_by_tag">
+                                        <img class="dovidka-help" src="{% static "staticfiles/icons/question-circle-fill.svg" %}" width="16" height="16" alt="help-info">
+                                    </a>
+                                </h3>
+                                {% include "orders/includes/included_order.html" %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+    <footer class="py-4 bg-dark fixed-bottom custom-shadow col-12" style="height: 50px; line-height:20px">
+        <div class="container d-flex">
+            <div class="col-11">
+                <p class="footer-text">Онлайн-бібліотека «New Age» © 2024</p>
+            </div>
+            <div class="col-1">
+                <a href="{% if request.user.role == 0 %}{% url "dovidka:profil_1" %}{% else %}{% url "dovidka:profil_2" %}{% endif %}" class="footer__help">
+                    <span><img class="footer-help" src="{% static "staticfiles/icons/info-square-fill.svg" %}" width="25" height="25" alt="help-info"></span>
+                </a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

@@ -1,0 +1,146 @@
+{% load static %}
+{% load books_tags %}
+{% load abonements_tags %}
+
+<!DOCTYPE html>
+<html lang="ua">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "staticfiles/css/bootstrap/bootstrap.min.css" %}">
+    <link href='https://fonts.googleapis.com/css?family=Fascinate Inline' rel='stylesheet'>
+    <link rel="stylesheet" href="{% static "staticfiles/css/my_css.css" %}">
+    {% block css %}{% endblock %}
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static "staticfiles/favicon/apple-touch-icon.png" %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static "staticfiles/favicon/favicon-32x32.png" %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static "staticfiles/favicon/favicon-16x16.png" %}">
+    <link rel="manifest" href="{% static "staticfiles/favicon/site.webmanifest" %}">
+    <title>{{title}}</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg bg-dark custom-shadow" data-bs-theme="dark">
+            <div class="container">
+                <a class="navbar-brand" href="{% url "main:index" %}">Home</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item dropdown ">
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Інформація
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item text-white" href="{% url "main:ordering_system" %}">Система бронювання</a></li>
+                                <li><a class="dropdown-item text-white" href="{% url "main:contacts" %}">Контакти</a></li>
+                                <li><a class="dropdown-item text-white" href="{% url "main:about" %}">Про нас</a></li>
+                            </ul>
+                        </li>
+                        {% if not user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link  text-white" href="{% url "user:users_cart" %}">Кошик</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link  text-white" href="{% url "user:login" %}">Увійти</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item dropdown ">
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Мій профіль
+                            </a>
+                            <ul class="dropdown-menu">
+                                {% if user.role != 1 %}
+                                    {% has_active_subscription request as tempp %}
+                                    {% if tempp %}
+                                        <li style="background-color: green; border-radius: 10px;"><a class="dropdown-item text-white" 
+                                            style="border-radius: 10px;" href="{% url "user:abonement_details" %}">Абонемент</a></li>
+                                    {% else %}
+                                        <li style="background-color: green; border-radius: 10px;"><a class="dropdown-item text-white" 
+                                            style="border-radius: 10px;" href="{% url 'user:abonement_form' %}">Оформити абонемент</a></li>
+                                    {% endif %}
+                                {% endif %}
+                                <li><a class="dropdown-item  text-white" href="{% url "user:profile" %}">Профіль</a>
+                                </li>
+                                {% if user.role != 1 %}
+                                <li><a class="dropdown-item  text-white" href="{% url "user:users_cart" %}">Кошик</a></li>
+                                <li><a class="dropdown-item  text-white" href="{% url "orders:books_info" %}">Інформація про книги</a></li>
+                                <li><a class="dropdown-item  text-white" href="{% url "catalog:watched_links" %}">Посилання на pdf файли</a></li>
+                                {% endif %}
+                                {% if user.is_admin or user.is_staff or user.role == 1 %}
+                                <li><a class="dropdown-item  text-white" href="{% url "orders:all_orders" %}">Бронювання читачів</a></li>
+                                <li><a class="dropdown-item  text-white" href="{% url "user:admin_panel" %}">Адміністраційна панель</a></li>
+                                {% endif %}
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item  text-white" href="{% url "user:logout" %}">Вийти</a></li>
+                            </ul>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    {% comment %} <a class="navbar-text logo-info" href="{% url 'main:index' %}">New</a>
+                    <a class="navbar-text logo-info2" href="{% url 'main:index' %}">age</a> {% endcomment %}
+                    {% comment %} <a class="navbar-text" href="{% url 'main:index' %}"><img class="logo-info "src="{% static "staticfiles/images/logonewage.jpg" %}" alt="logo"></a> {% endcomment %}
+                    <a href="{% url "main:index" %}" class="header__logo">
+                        <img class="logo-info "src="{% static "staticfiles/images/logonewage.jpg" %}" alt="logo">
+                    </a>
+                    <form class="d-flex" role="search" action="{% url "catalog:search" %}" method="get">
+                        <input class="form-control me-2" type="search" name="q" placeholder="Пошук книги" aria-label="Search">
+                        <button class="btn btn-outline-success text-white" type="submit">Шукати</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <section>
+        <div class="container">
+            <div class="row mt-1 position-fixed z-3">
+                <div class="dropdown mb-2">
+                    <button class="btn btn-secondary dropdown-toggle btn-dark" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Каталог
+                        <img class="mx-1" src="{% static "staticfiles/icons/grid-fill.svg" %}" alt="Catalog Icon" width="16"
+                            height="16">
+                    </button>
+                    <ul class="dropdown-menu bg-dark" data-bs-theme="dark">
+                        {% tag_categories as categories %}
+                        {% for category in categories %}
+                            <li><a class="dropdown-item text-white" href="{% url "catalog:index" category.slug %}">{{category.name}}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% if user.role != 1 %}
+                {% block modal_cart %}{% endblock %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="container">
+            <div class="row mt-1">
+                <div class="col-lg-1">
+                </div>
+                <div class="col-lg-10">
+                    {% include "includes/notifications.html" %}
+                    {% block content %}{% endblock %}
+                </div>
+                <div class="col-lg-1">
+                </div>
+            </div>
+        </div>
+    </section><br><br>
+    {% block footer %}{% endblock %}
+    <script src="{% static "staticfiles/js/jquery/jquery-3.7.0.min.js" %}"></script>
+    <script src="{% static "staticfiles/js/jquery-ajax.js" %}"></script>
+    <script src="{% static "staticfiles/js/chart.js" %}"></script>
+    <script src="{% static "staticfiles/js/bootstrap/bootstrap.bundle.min.js" %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+</body>
+
+</html>

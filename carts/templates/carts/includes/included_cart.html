@@ -1,0 +1,32 @@
+{% load static %}
+<!-- Included in cart_button (modal cart) and users_cart (Basket) --> <!-- отправляет на запрос api перерисованную разметку -->
+<div class="card mb-3 text-bg-light shadow-lg">
+    {% for cart in carts %}
+    <div class="card-header">
+        <a href="{% url "catalog:book" cart.book.slug %}" class="card-title"><h5>{{ cart.book.name}}</h5></a>
+        <a href="{% url "cart:cart_remove" %}" class="remove-from-cart" data-cart-id="{{ cart.id }}">
+            {% csrf_token %}
+            <img class="mx-1" src="{% static "staticfiles/icons/trash3-fill.svg" %}" alt="Catalog Icon" width="16" height="16">
+        </a>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item text-center">
+            <div class="row">
+                <div class="col-12 p-0">
+                    <p>Автор(и) книги: {{ cart.book.author }}</p>
+                </div>
+            </div>
+        </li>
+    </ul>
+    {% endfor %}
+</div>
+<div class="card mb-3 shadow-lg">
+    <div class="card-footer">
+        <p class="float-left">Загалом <strong>{{ carts.total_quantity }}</strong> книг(а)</p>
+    </div>
+</div>
+{% if carts and not is_order %}  <!-- + не страница заказа -->
+    <a class="btn btn-dark" href="{% url "orders:create_order" %}">
+        Оформити бронювання
+    </a>
+{% endif %}

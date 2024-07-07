@@ -1,0 +1,23 @@
+{
+	"1": ["Титульна... ", "http://localhost:8000/dovidka/index/", []],
+	"2": ["Гол... ", "http://localhost:8000/dovidka/", []],
+	"3": ["Інфор... ", "http://localhost:8000/dovidka/informatsiya/", []],
+	"4": ["Ко... ", "http://localhost:8000/dovidka/koshik/", []],
+	"5": ["Вхід/Ре... ", "http://localhost:8000/dovidka/vkhid_re_stratsiya/", []],
+	"6": ["Катало... ", "http://localhost:8000/dovidka/katalog_knig/", []],
+	"7": ["Сторінк... ", "http://localhost:8000/dovidka/storinka_knigi/", []],
+	"8": ["Оформлення... ", "http://localhost:8000/dovidka/oformlennya_bronyuvannya/", []],
+	"9": ["Сторінка ... ", "http://localhost:8000/dovidka/storinka_bronyuvannya/", []],
+	"10": ["Мій п... ", "http://localhost:8000/dovidka/mij_profil/", []],
+	"11": ["Чит... ", "http://localhost:8000/dovidka/chitacha/", [9]],
+	"12": ["Абон... ", "http://localhost:8000/dovidka/abonement/", [9,10]],
+	"13": ["Про... ", "http://localhost:8000/dovidka/profil_1/", [9,10]],
+	"14": ["Інформація... ", "http://localhost:8000/dovidka/informatsiya_pro_knigi/", [9,10]],
+	"15": ["PDF ... ", "http://localhost:8000/dovidka/pdf_fajli/", [9,10]],
+	"16": ["Адмініс... ", "http://localhost:8000/dovidka/administratora/", [9]],
+	"17": ["Про... ", "http://localhost:8000/dovidka/profil_2/", [9,11]],
+	"18": ["Бронюванн... ", "http://localhost:8000/dovidka/bronyuvannya_chitachiv/", [9,11]],
+	"19": ["Адміністрац... ", "http://localhost:8000/dovidka/administratsijna_panel/", [9,11]],
+	"20": ["Протермінова... ", "http://localhost:8000/dovidka/proterminovani_bronyuvannya/", [9,11,18]],
+	"21": ["Додавання/Оновленн... ", "http://localhost:8000/dovidka/dodavannya_onovlennya_knigi/", [9,11,18]]
+}

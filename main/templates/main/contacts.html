@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "staticfiles/css/contacts.css" %}">  
+    <link rel="stylesheet" href="{% static "staticfiles/css/my_footer_css.css" %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"/>
+{% endblock %}
+
+{% block modal_cart %}
+    {% include "includes/cart_button.html" %}
+{% endblock  %}
+
+{% block content %}
+    <div class="bg-white custom-shadow rounded" style="margin-top: 150px;">
+        <br/>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-4" style="margin-left: 90px;">
+                    <h2 style="color: black;">Контакти</h2>
+                    <br />
+                    <p class="contact">пров. Ігоря Вишнокрильського 5</p>
+                    <p class="contact"> Київ, Україна, 01032</p>
+                    <p class="contact">(095) 232-53-69, (066) 243-57-37</p>
+                    <p class="contact">newage@gmail.com</p>
+                </div>
+                <div class="col-md-4" style="margin-left: 90px;">
+                    <h2 style="color: black;">Соціальні медіа</h2>
+                    <br />
+                    <div class="social-media">
+                        <ul class="list-unstyled">
+                            <li><a href="#"><i class="fab fa-facebook-f" style="color: black"></i></a></li>
+                            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                            <li><a href="#"><i class="fab fa-google-plus-g"></i></a></li>
+                            <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <footer class="py-4 bg-dark fixed-bottom custom-shadow col-12" style="height: 50px; line-height:20px">
+        <div class="container d-flex">
+            <div class="col-11">
+                <p class="footer-text">Онлайн-бібліотека «New Age» © 2024</p>
+            </div>
+            <div class="col-1">
+                <a href="{% url "dovidka:informatsiya" %}" class="footer__help">
+                    <span><img class="footer-help" src="{% static "staticfiles/icons/info-square-fill.svg" %}" width="25" height="25" alt="help-info"></span>
+                </a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
+

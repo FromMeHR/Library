@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "staticfiles/css/my_footer_css.css" %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-1">
+        <div class="col-lg-1">
+        </div>
+        <div class="col-lg-10">
+            <div class="row">
+                <div class="container mt-5">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="bg-white p-4 mb-4 mx-2 rounded custom-shadow">
+                                <h5 class="mb-4">Список протермінованих бронювань:<br> <a href="{% url "orders:overdue_orders" %}" 
+                                    class="card-title">Перейти</a></h5>
+                                <h5 class="mb-4">Список всіх бронювань:<br> <a href="{% url "orders:all_orders" %}" 
+                                    class="card-title">Перейти</a></h5>
+                                <h5 class="mb-4">Додати нову книгу:<br> <a href="{% url "catalog:create_book" %}" 
+                                    class="card-title">Перейти</a></h5>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="bg-white p-4 mb-4 mx-2 rounded custom-shadow">
+                                <h3 class="text-center mb-4">Діаграма частоти бронювань книг</h3>
+                                <div class="row d-flex justify-content-center">
+                                    <div class="col-md-9">
+                                        <div class="card chart-container">
+                                            <canvas id="chart"></canvas>
+                                        </div>
+                                        <div class="text-center mt-2">
+                                            <button id="month-btn" class="btn btn-dark" data-controller-url="{% url 'user:get_chart_data' %}" data-timeframe="month">За місяць</button>
+                                            <button id="year-btn" class="btn btn-dark mx-2" data-controller-url="{% url 'user:get_chart_data' %}" data-timeframe="year">За рік</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 start-end-chart">
+                                        <label for="start-date" class="form-label">Дата початку:</label>
+                                        <input type="date" id="start-date" class="form-control mb-2" placeholder="Дата початку">
+                                        <label for="end-date" class="form-label">Дата кінця:</label>
+                                        <input type="date" id="end-date" class="form-control mb-2" placeholder="Дата кінця">
+                                        <button id="submit-btn" class="btn btn-dark btn-block">Підтвердити</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+    <footer class="py-4 bg-dark fixed-bottom custom-shadow col-12" style="height: 50px; line-height:20px">
+        <div class="container d-flex">
+            <div class="col-11">
+                <p class="footer-text">Онлайн-бібліотека «New Age» © 2024</p>
+            </div>
+            <div class="col-1">
+                <a href="{% url "dovidka:administratsijna_panel" %}" class="footer__help">
+                    <span><img class="footer-help" src="{% static "staticfiles/icons/info-square-fill.svg" %}" width="25" height="25" alt="help-info"></span>
+                </a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

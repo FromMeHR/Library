@@ -1,0 +1,59 @@
+<div class="container">
+    <div class="accordion" id="accordionExample">
+        {% for order in orders %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ order.id }}">
+                <button class="accordion-button {% if order != orders.0 %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ order.id }}" aria-expanded="false" aria-controls="collapse{{ order.id }}">
+                    Бронювання № {{ order.id }} - {{ order.get_formatted_time }} | Статус: <strong class="mx-2">{{order.get_order_status_display}}</strong>
+                </button>
+            </h2>
+            <div id="collapse{{ order.id }}" class="accordion-collapse collapse {% if order == orders.0 %}show{% endif %}" aria-labelledby="heading{{ order.id }}" data-bs-parent="#accordionExample">
+                <div class="accordion-body table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th>Книга</th>
+                                <th>Автор</th>
+                                <th>Рік публікації</th>
+                                <th>Статус книги</th>
+                                <th>Дії</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.orderitem_set.all %}
+                            <tr>
+                                <td><a class="text-white card-title" href="{% url "catalog:book" item.book.slug %}">{{ item.book.name|truncatechars:10 }}</a></td>
+                                <td>{{ item.book.author }}</td>
+                                <td>{{ item.book.publication_year }}</td>
+                                <td>{{ item.get_status_display }}</td>
+                                <td>
+                                    {% if order.status == 0 and request.user.role == 0 %}
+                                    <div class="btn-group">
+                                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Змінити
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-dark">
+                                            {% for key, value in status_choices.items %}
+                                            <li><a class="dropdown-item" href="{% url 'users:update_book_status' %}" onclick="event.preventDefault(); document.getElementById('change-status-form-{{ item.id }}-{{ key }}').submit();">{{ value }}</a></li>
+                                            <form id="change-status-form-{{ item.id }}-{{ key }}" action="{% url 'users:update_book_status' %}" method="post" style="display: none;">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="order_item_id" value="{{ item.id }}">
+                                                <input type="hidden" name="status" value="{{ key }}">
+                                            </form>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    {% else %}
+                                    <span>Немає</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

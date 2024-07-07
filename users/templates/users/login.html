@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block modal_cart %}
+{% include "includes/cart_button.html" %}
+{% endblock  %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "staticfiles/css/my_footer_css.css" %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-1">
+        <div class="col-lg-2">
+        </div>
+        <div class="col-lg-8">
+            <div class="row">
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 bg-white p-4 mb-4 mx-3 rounded custom-shadow">
+                            <h2 class="text-center mb-4">Авторизація</h2>
+                            <form action="{% url "user:login" %}" method="post">
+                                {% csrf_token %}
+
+                                {% if request.GET.next %}  <!-- if redirect через декоратор login_required we receive next in GET data -->
+                                    <input type="hidden" name="next" value={{request.GET.next}}>
+                                {% endif %}
+
+                                <div class="mb-3">
+                                    <label for="id_email" class="form-label">Email</label>
+                                    <input type="text" class="form-control" name="email" 
+                                    value="{% if form.email.value %}{{form.email.value}}{% endif %}" 
+                                    id="id_email" 
+                                    placeholder="Введіть електронну пошту" 
+                                    required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="id_password" class="form-label">Пароль</label>
+                                    <input type="password" class="form-control" name="password" id="id_password" placeholder="Введіть новий пароль" required>
+                                </div>
+
+                                <button type="submit" class="btn btn-dark btn-block">Увійти</button>
+                            </form>
+                            <div class="mt-3">
+                                <a href="#">Забули пароль?</a> | <a href="{% url "user:registration" %}">Створити аккаунт</a>
+                            </div>
+                            <hr>
+                            <div class="text-center">
+                                <p>Або авторизуйтесь через:</p>
+                                <a href="#" class="btn btn-dark">
+                                    <img class="mx-1" src="{% static "staticfiles/icons/google.svg" %}" alt="Catalog Icon" width="16" height="16">
+                                    Google
+                                </a>
+                                <a href="#" class="btn btn-dark">
+                                    <img class="mx-1" src="{% static "staticfiles/icons/facebook.svg" %}" alt="Catalog Icon" width="16" height="16">
+                                    Facebook
+                                </a>
+                                <a href="#" class="btn btn-dark">
+                                    <img class="mx-1" src="{% static "staticfiles/icons/github.svg" %}" alt="Catalog Icon" width="16" height="16">
+                                    GitHub
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+    <footer class="py-4 bg-dark fixed-bottom custom-shadow col-12" style="height: 50px; line-height:20px">
+        <div class="container d-flex">
+            <div class="col-11">
+                <p class="footer-text">Онлайн-бібліотека «New Age» © 2024</p>
+            </div>
+            <div class="col-1">
+                <a href="{% url "dovidka:vkhid_re_stratsiya" %}" class="footer__help">
+                    <span><img class="footer-help" src="{% static "staticfiles/icons/info-square-fill.svg" %}" width="25" height="25" alt="help-info"></span>
+                </a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
+

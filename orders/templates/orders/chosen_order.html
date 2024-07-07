@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "staticfiles/css/my_footer_css.css" %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-1">
+        <div class="col-1 z-0">
+            <div class="position-absolute card return-button mt-5 rounded mx-4 custom-shadow">
+                <a href="{% url 'orders:all_orders' %}">
+                    <img class="p-1" style="" src="{% static "staticfiles/icons/arrow-return-left.svg" %}" alt="Return to catalog" width="35" height="35">
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-10">
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="bg-white p-4 mb-4 rounded custom-shadow">
+                            <h3 class="text-center mb-4">Заброньовані читачем книги</h3>
+                            {% include "orders/includes/included_order.html" %}<br>
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-md-6">
+                                    <h3>Обране бронювання</h3>
+                                    <p>ID: {{ order.pk }}</p>
+                                    <p>Дата створення: {{ order.get_formatted_time }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h3>Інформація про читача</h3>
+                                    <p>Ім'я користувача: {{ user_of_order.username }}</p>
+                                    <p>Номер телефону: {{ order.phone_number }}</p>
+                                    <p>Email: {{ user_of_order.email }}</p>
+                                </div>
+                            </div>
+                            <h3>Форма для оновлення інформації бронювання</h3>
+                            <form action="{% url "orders:chosen_order" order.id %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group mb-3">
+                                    <label for="status">Статус:</label>
+                                    <select name="status" id="status" class="form-control" required>
+                                        <option value="0" {% if order.status == 0 %}selected{% endif %}>В процесі обробки</option>
+                                        <option value="1" {% if order.status == 1 %}selected{% endif %}>Готово для отримання</option>
+                                        <option value="2" {% if order.status == 2 %}selected{% endif %}>Взято на читання</option>
+                                        <option value="3" {% if order.status == 3 %}selected{% endif %}>Протерміновано з отриманням</option>
+                                        <option value="4" {% if order.status == 4 %}selected{% endif %}>Протерміновано з поверненням</option>
+                                        <option value="5" {% if order.status == 5 %}selected{% endif %}>Повернуто</option>
+                                        <option value="6" {% if order.status == 6 %}selected{% endif %}>Всі книги відмовлено</option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="order_start">Дата початку:</label>
+                                    <input type="datetime-local" name="order_start" id="order_start" value="{{ order.order_start|date:"Y-m-d\TH:i" }}" class="form-control">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="order_end">Дата закінчення:</label>
+                                    <input type="datetime-local" name="order_end" id="order_end" value="{{ order.order_end|date:"Y-m-d\TH:i" }}" class="form-control">
+                                </div>
+                                <button type="submit" class="btn btn-dark mb-3">Оновити дані</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+    <footer class="py-4 bg-dark fixed-bottom custom-shadow col-12" style="height: 50px; line-height:20px">
+        <div class="container d-flex">
+            <div class="col-11">
+                <p class="footer-text">Онлайн-бібліотека «New Age» © 2024</p>
+            </div>
+            <div class="col-1">
+                <a href="{% url "dovidka:storinka_bronyuvannya" %}" class="footer__help">
+                    <span><img class="footer-help" src="{% static "staticfiles/icons/info-square-fill.svg" %}" width="25" height="25" alt="help-info"></span>
+                </a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
