@@ -32,7 +32,7 @@
                                             {% if forloop.last and active_abonement %}
                                                 <h2>Зараз діє абонемент #{{ forloop.counter }}</h2><br>
                                                 <h2>Історія абонементів</h2>
-                                            {% else %}
+                                            {% elif forloop.last and not active_abonement  %}
                                                 <h2>Зараз не має активного абонементу</h2><br>
                                                 <h2>Історія абонементів</h2>
                                             {% endif %}

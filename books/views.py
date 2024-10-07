@@ -14,23 +14,23 @@ def catalog(request, category_slug=None):
     order_by = request.GET.get('order_by', None)
     query = request.GET.get('q', None)
 
-    if category_slug == 'all':
-        books = Books.objects.all()
-    elif query:
+    if query:
+        category_slug = 'all'
         books = q_search(query)
+    elif category_slug == 'all':
+        books = Books.objects.all()
     else:
-        books = Books.objects.filter(category__slug = category_slug)
-        if not books.exists():
-            raise Http404()
+        books = Books.objects.filter(category__slug=category_slug)
+
     if order_by and order_by != 'default':
         books = books.order_by(order_by)
-        
+
     paginator = Paginator(books, 3)
-    current_page = paginator.page(int(page))    
+    current_page = paginator.page(int(page))
     context = {
         "title": "Catalog",
         "books": current_page,
-        "slug_url": category_slug,
+        "slug_url": category_slug
     }
     return render(request, "books/catalog.html", context)
 
@@ -45,7 +45,7 @@ def book(request, book_slug):
             request.user.abonement_set.filter(abonement=True, abonement_end__gte=timezone.now()).exists():
             pdf_link = book.pdf_file.url
     if request.method == 'POST':
-        if not request.user.is_authenticated: 
+        if not request.user.is_authenticated:
             messages.warning(request, 'Ви повинні бути авторизовані.')
             return redirect(reverse('user:login'))
         form = CommentForm(request.POST)
@@ -66,7 +66,7 @@ def book(request, book_slug):
         'pdf_link': pdf_link,
         'form': form,
         'comments': comments,
-        'category_slug_url': category_slug_url,
+        'category_slug_url': category_slug_url
     }
     return render(request, "books/book.html", context)
 

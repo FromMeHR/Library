@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load books_tags %}
 
 {% block modal_cart %}
 {% include "includes/cart_button.html" %}
@@ -14,7 +15,7 @@
             <div class="row mt-1">
                 <div class="col-1">
                     <div class="position-absolute card return-button mt-5 rounded mx-4 custom-shadow">
-                        <a href="{% url 'catalog:index' category_slug_url %}">
+                        <a href="{% url 'catalog:index' category_slug_url %}?{% change_params %}">
                             <img class="p-1" style="" src="{% static "staticfiles/icons/arrow-return-left.svg" %}" alt="Return to catalog" width="35" height="35">
                         </a>
                     </div>
